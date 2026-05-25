@@ -1,0 +1,122 @@
+{
+  "id": 1004,
+  "title": "SaaS Business Assessment Template",
+  "sections": [
+    {
+      "name": "Product Information",
+      "content": "# {{product_name}} - SaaS Business Assessment\\n\\nURL: {{product_url}}\\n\\nTarget Customer: {{target_customer}}\\n\\nMarket Duration: {{market_duration}}",
+      "placeholders": [
+        {
+          "name": "product_name",
+          "description": "Name of the SaaS product"
+        },
+        {
+          "name": "product_url",
+          "description": "URL of the product"
+        },
+        {
+          "name": "target_customer",
+          "description": "Target customer profile"
+        },
+        {
+          "name": "market_duration",
+          "description": "How long product has been in market"
+        }
+      ],
+      "type": "text",
+      "order": 0
+    },
+    {
+      "name": "Business Metrics",
+      "content": "## Revenue Metrics\\n\\nAnnual Recurring Revenue (ARR): ${{arr}}\\n\\nMonthly Recurring Revenue (MRR): ${{mrr}}\\n\\nActive Paying Customers: {{paying_customers}}\\n\\nFree Trial Users: {{free_trial_users}}",
+      "placeholders": [
+        {
+          "name": "arr",
+          "description": "Annual Recurring Revenue in dollars"
+        },
+        {
+          "name": "mrr",
+          "description": "Monthly Recurring Revenue in dollars"
+        },
+        {
+          "name": "paying_customers",
+          "description": "Number of active paying customers"
+        },
+        {
+          "name": "free_trial_users",
+          "description": "Number of free trial users"
+        }
+      ],
+      "type": "text",
+      "order": 1
+    },
+    {
+      "name": "Customer Metrics",
+      "content": "## Customer Metrics\\n\\nMonthly Churn Rate: {{churn_rate}}%\\n\\nCustomer Acquisition Cost (CAC): ${{cac}}\\n\\nCustomer Lifetime Value (CLV): ${{clv}}\\n\\nCLV to CAC Ratio: {{clv_cac_ratio}}",
+      "placeholders": [
+        {
+          "name": "churn_rate",
+          "description": "Monthly churn rate as percentage"
+        },
+        {
+          "name": "cac",
+          "description": "Customer Acquisition Cost in dollars"
+        },
+        {
+          "name": "clv",
+          "description": "Customer Lifetime Value in dollars"
+        },
+        {
+          "name": "clv_cac_ratio",
+          "description": "CLV to CAC ratio"
+        }
+      ],
+      "type": "text",
+      "order": 2
+    },
+    {
+      "name": "Growth Analysis",
+      "content": "## Growth Metrics\\n\\nMonthly Signup Rate: {{signup_rate}}\\n\\nMonthly Growth Rate: {{growth_rate}}%\\n\\nKey Growth Channels: {{growth_channels}}",
+      "placeholders": [
+        {
+          "name": "signup_rate",
+          "description": "Monthly signup rate"
+        },
+        {
+          "name": "growth_rate",
+          "description": "Monthly growth rate as percentage"
+        },
+        {
+          "name": "growth_channels",
+          "description": "Key growth channels"
+        }
+      ],
+      "type": "text",
+      "order": 3
+    },
+    {
+      "name": "Recommendations",
+      "content": "## Key Challenges\\n\\n{{key_challenges}}\\n\\n## Priority Goals\\n\\n{{priority_goals}}\\n\\n## Recommended Support Areas\\n\\n{{support_areas}}",
+      "placeholders": [
+        {
+          "name": "key_challenges",
+          "description": "Key challenges facing the SaaS business"
+        },
+        {
+          "name": "priority_goals",
+          "description": "Priority goals for the next 12 months"
+        },
+        {
+          "name": "support_areas",
+          "description": "Recommended support areas"
+        }
+      ],
+      "type": "text",
+      "order": 4
+    }
+  ],
+  "createdAt": "2025-11-29T00:00:00.000Z",
+  "updatedAt": "2025-11-29T00:00:00.000Z",
+  "isCombined": false,
+  "combinedTemplateIds": []
+}

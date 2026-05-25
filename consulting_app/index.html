@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Consulting Toolkit</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Business Consulting Toolkit</h1>
+        <nav>
+            <button id="customersTab" class="tab-btn active">Customers</button>
+            <button id="formsTab" class="tab-btn">Forms</button>
+            <button id="reportsTab" class="tab-btn">Reports</button>
+            <button id="templatesTab" class="tab-btn">Templates</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Customers Tab -->
+        <div id="customersSection" class="section active">
+            <div class="section-header">
+                <h2>Customer Management</h2>
+                <button id="addCustomerBtn" class="btn-primary">Add Customer</button>
+            </div>
+            
+            <div id="customerForm" class="form-container hidden">
+                <h3>Add New Customer</h3>
+                <input type="text" id="companyName" placeholder="Company Name" required>
+                <input type="text" id="contactName" placeholder="Contact Name" required>
+                <input type="text" id="industry" placeholder="Industry">
+                <input type="email" id="email" placeholder="Email">
+                <input type="tel" id="phone" placeholder="Phone">
+                <div class="form-actions">
+                    <button id="saveCustomerBtn" class="btn-primary">Save</button>
+                    <button id="cancelCustomerBtn" class="btn-secondary">Cancel</button>
+                </div>
+            </div>
+            
+            <div id="customerList">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>Contact</th>
+                            <th>Industry</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerTableBody">
+                        <!-- Customer rows will be added here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Forms Tab -->
+        <div id="formsSection" class="section hidden">
+            <div class="section-header">
+                <h2>Form Management</h2>
+                <div>
+                    <button id="createFormBtn" class="btn-primary">Create New Form</button>
+                    <button id="importFormBtn" class="btn-secondary">Import Form</button>
+                </div>
+            </div>
+            
+            <div id="formCreator" class="form-container hidden">
+                <h3>Create New Form</h3>
+                <input type="text" id="formTitle" placeholder="Form Title" required>
+                <div id="formFieldsContainer">
+                    <!-- Form fields will be added here -->
+                </div>
+                <div class="form-actions">
+                    <button id="addFieldBtn" class="btn-secondary">Add Field</button>
+                    <button id="saveFormBtn" class="btn-primary">Save Form</button>
+                    <button id="cancelFormBtn" class="btn-secondary">Cancel</button>
+                </div>
+            </div>
+            
+            <div id="formList">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Form Title</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="formTableBody">
+                        <!-- Form rows will be added here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reportsSection" class="section hidden">
+            <div class="section-header">
+                <h2>Report Generation</h2>
+                <div>
+                    <button id="generateReportBtn" class="btn-primary">Generate Report</button>
+                    <button id="importExcelForReportBtn" class="btn-secondary">Import Excel Data</button>
+                    <button id="printReportBtn" class="btn-secondary">Print</button>
+                </div>
+            </div>
+
+            <div id="reportGenerator" class="form-container">
+                <div class="selector-group">
+                    <label for="selectCustomer">Select Customer:</label>
+                    <select id="selectCustomer"></select>
+                </div>
+
+                <div class="selector-group">
+                    <label for="selectTemplate">Select Template:</label>
+                    <select id="selectTemplate"></select>
+                </div>
+
+                <div id="reportFormContainer">
+                    <div id="excelImportNotice" class="info-notice hidden">
+                        <p>✅ Excel data has been imported. Fields are pre-filled with your Excel data.</p>
+                    </div>
+                    <!-- Dynamic form fields will appear here -->
+                </div>
+
+                <div class="form-actions">
+                    <button id="generateReportBtn2" class="btn-primary">Generate Report</button>
+                    <button id="previewReportBtn" class="btn-secondary">Preview</button>
+                </div>
+
+                <div id="reportPreview" class="preview-container">
+                    <!-- Report preview will appear here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Templates Tab -->
+        <div id="templatesSection" class="section hidden">
+            <div class="section-header">
+                <h2>Templates</h2>
+                <div>
+                    <button id="addTemplateBtn" class="btn-primary">Add Template</button>
+                    <button id="combineTemplatesBtn" class="btn-secondary">Combine Templates</button>
+                    <button id="importTemplateBtn" class="btn-secondary">Import Template</button>
+                </div>
+            </div>
+
+            <div id="templateInstructions" class="form-container">
+                <h3>How to Use Templates</h3>
+                <p>Create detailed templates with multiple sections, placeholders, and different content types. Use <strong>{{placeholder_name}}</strong> format in your content to create fillable fields.</p>
+                <p>You can combine multiple templates to create larger, more complex documents.</p>
+            </div>
+
+            <div id="templateEditor" class="form-container hidden">
+                <h3 id="templateEditorTitle">Create New Template</h3>
+                <input type="text" id="templateTitle" placeholder="Template Title" required>
+
+                <div id="templateSectionsContainer">
+                    <h4>Template Sections</h4>
+                    <p>Add different sections to organize your template content:</p>
+                    <div id="sectionsList">
+                        <!-- Sections will be added here -->
+                    </div>
+                    <button id="addSectionBtn" class="btn-secondary">Add Section</button>
+                </div>
+
+                <div class="form-actions">
+                    <button id="saveTemplateBtn" class="btn-primary">Save Template</button>
+                    <button id="cancelTemplateBtn" class="btn-secondary">Cancel</button>
+                </div>
+            </div>
+
+            <div id="combineTemplatesModal" class="form-container hidden">
+                <h3>Combine Templates</h3>
+                <p>Select two templates to merge them into a larger document:</p>
+                <div class="selector-group">
+                    <label for="template1Select">Select First Template:</label>
+                    <select id="template1Select"></select>
+                </div>
+                <div class="selector-group">
+                    <label for="template2Select">Select Second Template:</label>
+                    <select id="template2Select"></select>
+                </div>
+                <input type="text" id="combinedTemplateTitle" placeholder="Combined Template Title" required>
+                <div class="form-actions">
+                    <button id="combineSaveBtn" class="btn-primary">Save Combined Template</button>
+                    <button id="combineCancelBtn" class="btn-secondary">Cancel</button>
+                </div>
+            </div>
+
+            <div id="templateList">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Template Name</th>
+                            <th>Created</th>
+                            <th>Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="templateTableBody">
+                        <!-- Template rows will be added here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <script src="storage.js"></script>
+    <script src="forms.js"></script>
+    <script src="reports.js"></script>
+    <script src="excel-importer.js"></script>
+    <script src="template-system.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

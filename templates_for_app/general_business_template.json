@@ -1,0 +1,142 @@
+{
+  "id": 1005,
+  "title": "General Business Assessment Template",
+  "sections": [
+    {
+      "name": "Company Overview",
+      "content": "# {{company_name}} Business Assessment\\n\\nContact: {{contact_name}}\\n\\nIndustry: {{industry}}\\n\\nLocation: {{location}}\\n\\nYears in Operation: {{years_operating}}\\n\\nCompany Size: {{company_size}}",
+      "placeholders": [
+        {
+          "name": "company_name",
+          "description": "Name of the company"
+        },
+        {
+          "name": "contact_name",
+          "description": "Primary contact name"
+        },
+        {
+          "name": "industry",
+          "description": "Industry sector"
+        },
+        {
+          "name": "location",
+          "description": "Business location"
+        },
+        {
+          "name": "years_operating",
+          "description": "Years in operation"
+        },
+        {
+          "name": "company_size",
+          "description": "Company size (number of employees or revenue range)"
+        }
+      ],
+      "type": "text",
+      "order": 0
+    },
+    {
+      "name": "Business Goals & Challenges",
+      "content": "## Primary Business Goals (Next 12 Months)\\n\\n{{primary_goals}}\\n\\n## Biggest Current Challenge\\n\\n{{biggest_challenge}}",
+      "placeholders": [
+        {
+          "name": "primary_goals",
+          "description": "Primary business goals for the next 12 months"
+        },
+        {
+          "name": "biggest_challenge",
+          "description": "Biggest challenge the business is currently facing"
+        }
+      ],
+      "type": "text",
+      "order": 1
+    },
+    {
+      "name": "Financial Overview",
+      "content": "## Financial Metrics\\n\\nAnnual Revenue Range: {{revenue_range}}\\n\\nPrimary Revenue Streams: {{revenue_streams}}\\n\\nCurrent Profitability: {{profitability_status}}\\n\\nGrowth Rate: {{growth_rate}}%",
+      "placeholders": [
+        {
+          "name": "revenue_range",
+          "description": "Annual revenue range"
+        },
+        {
+          "name": "revenue_streams",
+          "description": "Primary revenue streams"
+        },
+        {
+          "name": "profitability_status",
+          "description": "Current profitability status"
+        },
+        {
+          "name": "growth_rate",
+          "description": "Growth rate as percentage"
+        }
+      ],
+      "type": "text",
+      "order": 2
+    },
+    {
+      "name": "Operations & Technology",
+      "content": "## Operations Overview\\n\\nKey Operations: {{key_operations}}\\n\\nTechnology Stack: {{tech_stack}}\\n\\nAutomation Level: {{automation_level}}\\n\\nData Management: {{data_management}}",
+      "placeholders": [
+        {
+          "name": "key_operations",
+          "description": "Key business operations"
+        },
+        {
+          "name": "tech_stack",
+          "description": "Current technology stack"
+        },
+        {
+          "name": "automation_level",
+          "description": "Level of business process automation"
+        },
+        {
+          "name": "data_management",
+          "description": "Data management approach"
+        }
+      ],
+      "type": "text",
+      "order": 3
+    },
+    {
+      "name": "Market & Competition",
+      "content": "## Market Position\\n\\nTarget Market: {{target_market}}\\n\\nCompetitive Advantages: {{competitive_advantages}}\\n\\nCompetitive Challenges: {{competitive_challenges}}",
+      "placeholders": [
+        {
+          "name": "target_market",
+          "description": "Primary target market"
+        },
+        {
+          "name": "competitive_advantages",
+          "description": "Competitive advantages"
+        },
+        {
+          "name": "competitive_challenges",
+          "description": "Competitive challenges"
+        }
+      ],
+      "type": "text",
+      "order": 4
+    },
+    {
+      "name": "Recommendations",
+      "content": "## Key Recommendations\\n\\n{{recommendations}}\\n\\n## Implementation Priority\\n\\n{{implementation_priority}}",
+      "placeholders": [
+        {
+          "name": "recommendations",
+          "description": "Key business recommendations"
+        },
+        {
+          "name": "implementation_priority",
+          "description": "Priority for implementation"
+        }
+      ],
+      "type": "text",
+      "order": 5
+    }
+  ],
+  "createdAt": "2025-11-29T00:00:00.000Z",
+  "updatedAt": "2025-11-29T00:00:00.000Z",
+  "isCombined": false,
+  "combinedTemplateIds": []
+}

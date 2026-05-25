@@ -1,0 +1,86 @@
+{
+  "id": 1001,
+  "title": "AI Readiness Assessment Template",
+  "sections": [
+    {
+      "name": "Executive Dashboard",
+      "content": "# AI Readiness Score: {{ai_readiness_score}}/10\\n\\nOpportunity Estimate: ${{opportunity_estimate}}\\n\\nImplementation Timeline: {{implementation_timeline}} months",
+      "placeholders": [
+        {
+          "name": "ai_readiness_score",
+          "description": "AI readiness score from 1-10"
+        },
+        {
+          "name": "opportunity_estimate",
+          "description": "Estimated opportunity in dollars"
+        },
+        {
+          "name": "implementation_timeline",
+          "description": "Timeline for implementation in months"
+        }
+      ],
+      "type": "text",
+      "order": 0
+    },
+    {
+      "name": "Current State Analysis",
+      "content": "## Technology Maturity Assessment\\n\\n- AI Integration Level: {{ai_integration_level}}\\n- Data Collection Capability: {{data_collection_capability}}\\n- Process Automation: {{process_automation_level}}\\n- Analytics Capability: {{analytics_capability}}",
+      "placeholders": [
+        {
+          "name": "ai_integration_level",
+          "description": "Current AI integration level"
+        },
+        {
+          "name": "data_collection_capability",
+          "description": "Data collection capability level"
+        },
+        {
+          "name": "process_automation_level",
+          "description": "Process automation level"
+        },
+        {
+          "name": "analytics_capability",
+          "description": "Analytics capability level"
+        }
+      ],
+      "type": "text",
+      "order": 1
+    },
+    {
+      "name": "Top AI Opportunities",
+      "content": "## Recommended AI Opportunities\\n\\n1. {{opportunity_1}} (ROI: ${{roi_1}})\\n2. {{opportunity_2}} (ROI: ${{roi_2}})\\n3. {{opportunity_3}} (ROI: ${{roi_3}})",
+      "placeholders": [
+        {
+          "name": "opportunity_1",
+          "description": "First AI opportunity recommendation"
+        },
+        {
+          "name": "opportunity_2",
+          "description": "Second AI opportunity recommendation"
+        },
+        {
+          "name": "opportunity_3",
+          "description": "Third AI opportunity recommendation"
+        },
+        {
+          "name": "roi_1",
+          "description": "ROI for first opportunity"
+        },
+        {
+          "name": "roi_2",
+          "description": "ROI for second opportunity"
+        },
+        {
+          "name": "roi_3",
+          "description": "ROI for third opportunity"
+        }
+      ],
+      "type": "text",
+      "order": 2
+    }
+  ],
+  "createdAt": "2025-11-29T00:00:00.000Z",
+  "updatedAt": "2025-11-29T00:00:00.000Z",
+  "isCombined": false,
+  "combinedTemplateIds": []
+}

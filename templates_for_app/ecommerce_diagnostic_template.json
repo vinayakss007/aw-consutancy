@@ -1,0 +1,118 @@
+{
+  "id": 1003,
+  "title": "E-commerce Diagnostic Template",
+  "sections": [
+    {
+      "name": "Business Overview",
+      "content": "# {{business_name}} - E-commerce Assessment\\n\\nWebsite: {{website_url}}\\n\\nPlatform: {{ecommerce_platform}}\\n\\nYears in Operation: {{years_operating}}",
+      "placeholders": [
+        {
+          "name": "business_name",
+          "description": "Name of the e-commerce business"
+        },
+        {
+          "name": "website_url",
+          "description": "Website URL"
+        },
+        {
+          "name": "ecommerce_platform",
+          "description": "E-commerce platform used"
+        },
+        {
+          "name": "years_operating",
+          "description": "Years in operation"
+        }
+      ],
+      "type": "text",
+      "order": 0
+    },
+    {
+      "name": "Performance Metrics",
+      "content": "## Revenue Metrics\\n\\nAnnual Revenue: ${{annual_revenue}}\\n\\nAverage Monthly Revenue: ${{monthly_revenue}}\\n\\nAverage Order Value: ${{aov}}\\n\\nCustomer Acquisition Cost: ${{cac}}\\n\\nCustomer Lifetime Value: ${{clv}}\\n\\nCart Abandonment Rate: {{cart_abandonment_rate}}%",
+      "placeholders": [
+        {
+          "name": "annual_revenue",
+          "description": "Annual revenue in dollars"
+        },
+        {
+          "name": "monthly_revenue",
+          "description": "Monthly revenue in dollars"
+        },
+        {
+          "name": "aov",
+          "description": "Average order value in dollars"
+        },
+        {
+          "name": "cac",
+          "description": "Customer acquisition cost in dollars"
+        },
+        {
+          "name": "clv",
+          "description": "Customer lifetime value in dollars"
+        },
+        {
+          "name": "cart_abandonment_rate",
+          "description": "Cart abandonment rate as percentage"
+        }
+      ],
+      "type": "text",
+      "order": 1
+    },
+    {
+      "name": "Marketing Channels",
+      "content": "## Primary Traffic Sources\\n\\n1. {{primary_channel_1}} - {{channel_1_percentage}}% of traffic\\n2. {{primary_channel_2}} - {{channel_2_percentage}}% of traffic\\n3. {{primary_channel_3}} - {{channel_3_percentage}}% of traffic\\n\\n## Repeat Customer Revenue\\n\\n{{repeat_customer_percentage}}% of revenue from repeat customers",
+      "placeholders": [
+        {
+          "name": "primary_channel_1",
+          "description": "Primary marketing channel 1"
+        },
+        {
+          "name": "channel_1_percentage",
+          "description": "Percentage of traffic from channel 1"
+        },
+        {
+          "name": "primary_channel_2",
+          "description": "Primary marketing channel 2"
+        },
+        {
+          "name": "channel_2_percentage",
+          "description": "Percentage of traffic from channel 2"
+        },
+        {
+          "name": "primary_channel_3",
+          "description": "Primary marketing channel 3"
+        },
+        {
+          "name": "channel_3_percentage",
+          "description": "Percentage of traffic from channel 3"
+        },
+        {
+          "name": "repeat_customer_percentage",
+          "description": "Percentage of revenue from repeat customers"
+        }
+      ],
+      "type": "text",
+      "order": 2
+    },
+    {
+      "name": "Recommendations",
+      "content": "## Key Challenges\\n\\n{{key_challenges}}\\n\\n## Recommendations\\n\\n{{recommendations}}",
+      "placeholders": [
+        {
+          "name": "key_challenges",
+          "description": "Key challenges facing the e-commerce business"
+        },
+        {
+          "name": "recommendations",
+          "description": "Recommendations for improvement"
+        }
+      ],
+      "type": "text",
+      "order": 3
+    }
+  ],
+  "createdAt": "2025-11-29T00:00:00.000Z",
+  "updatedAt": "2025-11-29T00:00:00.000Z",
+  "isCombined": false,
+  "combinedTemplateIds": []
+}

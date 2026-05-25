@@ -1,0 +1,106 @@
+{
+  "id": 1002,
+  "title": "Operations Efficiency Report Template",
+  "sections": [
+    {
+      "name": "Process Performance Dashboard",
+      "content": "# Operations Efficiency Score: {{efficiency_score}}/10\\n\\nCost Reduction Potential: ${{cost_reduction_potential}}\\n\\nTime Savings: {{time_savings}} hours/month",
+      "placeholders": [
+        {
+          "name": "efficiency_score",
+          "description": "Overall efficiency score"
+        },
+        {
+          "name": "cost_reduction_potential",
+          "description": "Potential cost reduction in dollars"
+        },
+        {
+          "name": "time_savings",
+          "description": "Time savings in hours per month"
+        }
+      ],
+      "type": "text",
+      "order": 0
+    },
+    {
+      "name": "Bottleneck Analysis",
+      "content": "## Current Processes\\n\\n- {{process_1}}: {{process_1_time}}\\n- {{process_2}}: {{process_2_time}}\\n- {{process_3}}: {{process_3_time}}\\n\\n## Identified Bottlenecks\\n\\n1. {{bottleneck_1}}\\n2. {{bottleneck_2}}\\n3. {{bottleneck_3}}",
+      "placeholders": [
+        {
+          "name": "process_1",
+          "description": "First process name"
+        },
+        {
+          "name": "process_2",
+          "description": "Second process name"
+        },
+        {
+          "name": "process_3",
+          "description": "Third process name"
+        },
+        {
+          "name": "process_1_time",
+          "description": "Time for first process"
+        },
+        {
+          "name": "process_2_time",
+          "description": "Time for second process"
+        },
+        {
+          "name": "process_3_time",
+          "description": "Time for third process"
+        },
+        {
+          "name": "bottleneck_1",
+          "description": "First identified bottleneck"
+        },
+        {
+          "name": "bottleneck_2",
+          "description": "Second identified bottleneck"
+        },
+        {
+          "name": "bottleneck_3",
+          "description": "Third identified bottleneck"
+        }
+      ],
+      "type": "text",
+      "order": 1
+    },
+    {
+      "name": "Improvement Recommendations",
+      "content": "## Improvement Priorities\\n\\n1. {{improvement_1}} - Impact: {{impact_1}}\\n2. {{improvement_2}} - Impact: {{impact_2}}\\n3. {{improvement_3}} - Impact: {{impact_3}}",
+      "placeholders": [
+        {
+          "name": "improvement_1",
+          "description": "First improvement recommendation"
+        },
+        {
+          "name": "improvement_2",
+          "description": "Second improvement recommendation"
+        },
+        {
+          "name": "improvement_3",
+          "description": "Third improvement recommendation"
+        },
+        {
+          "name": "impact_1",
+          "description": "Impact of first improvement"
+        },
+        {
+          "name": "impact_2",
+          "description": "Impact of second improvement"
+        },
+        {
+          "name": "impact_3",
+          "description": "Impact of third improvement"
+        }
+      ],
+      "type": "text",
+      "order": 2
+    }
+  ],
+  "createdAt": "2025-11-29T00:00:00.000Z",
+  "updatedAt": "2025-11-29T00:00:00.000Z",
+  "isCombined": false,
+  "combinedTemplateIds": []
+}
