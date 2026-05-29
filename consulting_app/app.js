@@ -116,6 +116,17 @@ class ConsultingApp {
             this.renderForms();
         } else if (tabId === 'templatesTab') {
             this.renderTemplates();
+        } else if (tabId === 'aiTab') {
+            this.populateAIDropdowns();
+        } else if (tabId === 'workflowsTab') {
+            this.renderWorkflowsTab();
+        } else if (tabId === 'settingsTab') {
+            const settingsContainer = document.getElementById('aiSettingsContainer');
+            if (settingsContainer) {
+                settingsContainer.innerHTML = aiSettingsUI.renderSettingsPanel();
+                aiSettingsUI.bindSettingsEvents();
+            }
+            this.updateAIStatus();
         }
     }
 
@@ -813,9 +824,602 @@ class ConsultingApp {
                 });
         }
     }
+
+    // ============== AI INTEGRATION METHODS ==============
+
+    // Initialize AI features
+    initAI() {
+        this.bindAIEvents();
+        this.updateAIStatus();
+    }
+
+    // Bind all AI-related events
+    bindAIEvents() {
+        // AI Report Generator
+        const genReportBtn = document.getElementById('generateAIReportBtn');
+        if (genReportBtn) genReportBtn.addEventListener('click', () => this.generateAIReport());
+
+        // AI Business Scorer
+        const genScoreBtn = document.getElementById('generateAIScoreBtn');
+        if (genScoreBtn) genScoreBtn.addEventListener('click', () => this.generateAIScore());
+
+        // AI SWOT
+        const genSwotBtn = document.getElementById('generateAISWOTBtn');
+        if (genSwotBtn) genSwotBtn.addEventListener('click', () => this.generateAISWOT());
+
+        // AI Form Generator
+        const genFormBtn = document.getElementById('generateAIFormBtn');
+        if (genFormBtn) genFormBtn.addEventListener('click', () => this.generateAIForm());
+
+        // AI Proposal
+        const genProposalBtn = document.getElementById('generateAIProposalBtn');
+        if (genProposalBtn) genProposalBtn.addEventListener('click', () => this.generateAIProposal());
+
+        // AI Insights
+        const genInsightsBtn = document.getElementById('generateAIInsightsBtn');
+        if (genInsightsBtn) genInsightsBtn.addEventListener('click', () => this.generateAIInsights());
+    }
+
+    // Update AI status indicator in header
+    updateAIStatus() {
+        const indicator = document.getElementById('aiStatusIndicator');
+        if (indicator) {
+            const status = aiGateway.getStatus();
+            indicator.className = `ai-mini-status ${status.isReady ? 'ready' : 'not-ready'}`;
+            indicator.innerHTML = `
+                <span class="mini-dot"></span>
+                <span class="mini-label">AI: ${status.isReady ? 'On' : 'Off'}</span>
+            `;
+        }
+    }
+
+    // Populate AI tool customer dropdowns
+    async populateAIDropdowns() {
+        const customers = await this.storageService.getAllCustomers();
+        const dropdowns = ['aiReportCustomer', 'aiScoreCustomer', 'aiSwotCustomer', 'aiProposalCustomer'];
+
+        dropdowns.forEach(id => {
+            const select = document.getElementById(id);
+            if (select) {
+                select.innerHTML = '<option value="">Select Customer</option>';
+                customers.forEach(c => {
+                    const option = document.createElement('option');
+                    option.value = c.id;
+                    option.textContent = c.companyName;
+                    select.appendChild(option);
+                });
+            }
+        });
+    }
+
+    // Show AI output
+    showAIOutput(title, content, meta = {}) {
+        const section = document.getElementById('aiOutputSection');
+        const titleEl = document.getElementById('aiOutputTitle');
+        const contentEl = document.getElementById('aiOutputContent');
+        const metaEl = document.getElementById('aiOutputMeta');
+
+        titleEl.textContent = title;
+        contentEl.innerHTML = content;
+        contentEl.contentEditable = 'false';
+
+        metaEl.innerHTML = `
+            <span>Provider: ${meta.provider || 'AI'}</span>
+            <span>Model: ${meta.model || 'default'}</span>
+            ${meta.tokens ? `<span>Tokens: ${meta.tokens.totalTokens || '?'}</span>` : ''}
+            <span>Generated: ${new Date().toLocaleTimeString()}</span>
+        `;
+
+        section.classList.remove('hidden');
+        section.scrollIntoView({ behavior: 'smooth' });
+
+        // Store for regeneration
+        this.lastAIRequest = { title, meta };
+    }
+
+    // Show loading state in AI output
+    showAILoading(message = 'Generating with AI...') {
+        const section = document.getElementById('aiOutputSection');
+        const contentEl = document.getElementById('aiOutputContent');
+        const metaEl = document.getElementById('aiOutputMeta');
+
+        document.getElementById('aiOutputTitle').textContent = message;
+        contentEl.innerHTML = '<div class="ai-loading">Thinking...</div>';
+        metaEl.innerHTML = `<span>Using: ${aiGateway.config.provider} / ${aiGateway.getProviderConfig().model}</span>`;
+        section.classList.remove('hidden');
+    }
+
+    // Toggle edit mode on AI output
+    toggleAIEdit() {
+        const contentEl = document.getElementById('aiOutputContent');
+        const isEditable = contentEl.contentEditable === 'true';
+        contentEl.contentEditable = isEditable ? 'false' : 'true';
+        document.getElementById('aiEditBtn').textContent = isEditable ? 'Edit' : 'Done';
+    }
+
+    // Copy AI output to clipboard
+    copyAIOutput() {
+        const contentEl = document.getElementById('aiOutputContent');
+        navigator.clipboard.writeText(contentEl.innerText).then(() => {
+            alert('Copied to clipboard!');
+        });
+    }
+
+    // Print AI output
+    printAIOutput() {
+        const content = document.getElementById('aiOutputContent').innerHTML;
+        const title = document.getElementById('aiOutputTitle').textContent;
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`<html><head><title>${title}</title>
+            <style>body{font-family:Arial,sans-serif;margin:2rem;line-height:1.6}
+            h1{color:#2c3e50;border-bottom:2px solid #3498db;padding-bottom:0.5rem}
+            table{width:100%;border-collapse:collapse;margin:1rem 0}
+            th,td{border:1px solid #ddd;padding:0.5rem;text-align:left}
+            th{background:#f8f9fa}</style></head>
+            <body><h1>${title}</h1>${content}</body></html>`);
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    // Regenerate last AI output
+    async regenerateAIOutput() {
+        if (this.lastAIGenerateFunction) {
+            await this.lastAIGenerateFunction();
+        }
+    }
+
+    // --- AI Tool Methods ---
+
+    async generateAIReport() {
+        const customerId = document.getElementById('aiReportCustomer').value;
+        const reportType = document.getElementById('aiReportType').value;
+        const context = document.getElementById('aiReportContext').value;
+
+        if (!customerId) { alert('Please select a customer'); return; }
+        if (!aiGateway.isReady()) { alert('Please configure AI in Settings first'); return; }
+
+        const customers = await this.storageService.getAllCustomers();
+        const customer = customers.find(c => c.id == customerId);
+
+        this.showAILoading('Generating Report...');
+
+        try {
+            const formData = context ? { additionalContext: context } : {};
+            const result = await aiReportGenerator.generateReport(customer, formData, reportType);
+            this.showAIOutput(`${reportType.charAt(0).toUpperCase() + reportType.slice(1)} Report - ${customer.companyName}`, result.content, result.metadata);
+            this.lastAIGenerateFunction = () => this.generateAIReport();
+        } catch (error) {
+            this.showAIOutput('Error', `<p style="color:red">Failed to generate report: ${error.message}</p><p>Check your API key in Settings.</p>`, {});
+        }
+    }
+
+    async generateAIScore() {
+        const customerId = document.getElementById('aiScoreCustomer').value;
+        if (!customerId) { alert('Please select a customer'); return; }
+        if (!aiGateway.isReady()) { alert('Please configure AI in Settings first'); return; }
+
+        const customers = await this.storageService.getAllCustomers();
+        const customer = customers.find(c => c.id == customerId);
+
+        this.showAILoading('Scoring Business...');
+
+        try {
+            const scores = await aiReportGenerator.scoreBusiness(customer, {});
+            let html = `<h3>Business Score Card - ${customer.companyName}</h3>`;
+
+            if (scores.scores) {
+                html += '<table><tr><th>Dimension</th><th>Score</th><th>Justification</th></tr>';
+                for (const [dim, data] of Object.entries(scores.scores)) {
+                    html += `<tr><td><strong>${dim}</strong></td><td>${data.score}/10</td><td>${data.justification}</td></tr>`;
+                }
+                html += '</table>';
+                html += `<h4>Overall Score: ${scores.overallScore}/10</h4>`;
+                if (scores.topStrengths) html += `<p><strong>Strengths:</strong> ${scores.topStrengths.join(', ')}</p>`;
+                if (scores.topWeaknesses) html += `<p><strong>Areas to Improve:</strong> ${scores.topWeaknesses.join(', ')}</p>`;
+            } else {
+                html += `<p>${JSON.stringify(scores, null, 2)}</p>`;
+            }
+
+            this.showAIOutput(`Score Card - ${customer.companyName}`, html, { provider: aiGateway.config.provider, model: aiGateway.getProviderConfig().model });
+            this.lastAIGenerateFunction = () => this.generateAIScore();
+        } catch (error) {
+            this.showAIOutput('Error', `<p style="color:red">${error.message}</p>`, {});
+        }
+    }
+
+    async generateAISWOT() {
+        const customerId = document.getElementById('aiSwotCustomer').value;
+        if (!customerId) { alert('Please select a customer'); return; }
+        if (!aiGateway.isReady()) { alert('Please configure AI in Settings first'); return; }
+
+        const customers = await this.storageService.getAllCustomers();
+        const customer = customers.find(c => c.id == customerId);
+
+        this.showAILoading('Generating SWOT Analysis...');
+
+        try {
+            const swot = await aiInsights.generateSWOT(customer, {});
+            let html = `<h3>SWOT Analysis - ${customer.companyName}</h3>`;
+
+            if (swot.strengths) {
+                html += '<table><tr><th>Strengths</th><th>Weaknesses</th></tr><tr><td><ul>';
+                swot.strengths.forEach(s => html += `<li>${s.point} (${s.impact})</li>`);
+                html += '</ul></td><td><ul>';
+                (swot.weaknesses || []).forEach(w => html += `<li>${w.point} (${w.impact})</li>`);
+                html += '</ul></td></tr><tr><th>Opportunities</th><th>Threats</th></tr><tr><td><ul>';
+                (swot.opportunities || []).forEach(o => html += `<li>${o.point} (${o.timeframe})</li>`);
+                html += '</ul></td><td><ul>';
+                (swot.threats || []).forEach(t => html += `<li>${t.point} (${t.severity})</li>`);
+                html += '</ul></td></tr></table>';
+                if (swot.strategicImplications) html += `<h4>Strategic Implications</h4><p>${swot.strategicImplications}</p>`;
+            } else {
+                html += `<pre>${JSON.stringify(swot, null, 2)}</pre>`;
+            }
+
+            this.showAIOutput(`SWOT - ${customer.companyName}`, html, { provider: aiGateway.config.provider, model: aiGateway.getProviderConfig().model });
+            this.lastAIGenerateFunction = () => this.generateAISWOT();
+        } catch (error) {
+            this.showAIOutput('Error', `<p style="color:red">${error.message}</p>`, {});
+        }
+    }
+
+    async generateAIForm() {
+        const industry = document.getElementById('aiFormIndustry').value;
+        const type = document.getElementById('aiFormType').value;
+        if (!industry) { alert('Please enter an industry'); return; }
+        if (!aiGateway.isReady()) { alert('Please configure AI in Settings first'); return; }
+
+        this.showAILoading('Generating Assessment Form...');
+
+        try {
+            const formData = await aiInsights.generateFormQuestions(industry, type);
+            let html = `<h3>${formData.title || 'Assessment Form'}</h3>`;
+            html += `<p>${formData.description || ''}</p>`;
+
+            if (formData.categories) {
+                formData.categories.forEach(cat => {
+                    html += `<h4>${cat.name}</h4><ol>`;
+                    cat.questions.forEach(q => {
+                        html += `<li><strong>${q.question}</strong> <em>(${q.type})</em>${q.helpText ? ` - ${q.helpText}` : ''}</li>`;
+                    });
+                    html += '</ol>';
+                });
+            } else {
+                html += `<pre>${JSON.stringify(formData, null, 2)}</pre>`;
+            }
+
+            this.showAIOutput(`AI Form - ${industry} ${type}`, html, { provider: aiGateway.config.provider, model: aiGateway.getProviderConfig().model });
+            this.lastAIGenerateFunction = () => this.generateAIForm();
+        } catch (error) {
+            this.showAIOutput('Error', `<p style="color:red">${error.message}</p>`, {});
+        }
+    }
+
+    async generateAIProposal() {
+        const customerId = document.getElementById('aiProposalCustomer').value;
+        const service = document.getElementById('aiProposalService').value;
+        if (!customerId) { alert('Please select a customer'); return; }
+        if (!service) { alert('Please enter a service offering'); return; }
+        if (!aiGateway.isReady()) { alert('Please configure AI in Settings first'); return; }
+
+        const customers = await this.storageService.getAllCustomers();
+        const customer = customers.find(c => c.id == customerId);
+
+        this.showAILoading('Writing Proposal...');
+
+        try {
+            const content = await aiInsights.generateProposal(customer, service);
+            this.showAIOutput(`Proposal - ${customer.companyName}`, content, { provider: aiGateway.config.provider, model: aiGateway.getProviderConfig().model });
+            this.lastAIGenerateFunction = () => this.generateAIProposal();
+        } catch (error) {
+            this.showAIOutput('Error', `<p style="color:red">${error.message}</p>`, {});
+        }
+    }
+
+    async generateAIInsights() {
+        const industry = document.getElementById('aiInsightIndustry').value;
+        if (!industry) { alert('Please enter an industry'); return; }
+        if (!aiGateway.isReady()) { alert('Please configure AI in Settings first'); return; }
+
+        this.showAILoading('Researching Industry...');
+
+        try {
+            const benchmarks = await aiInsights.getIndustryBenchmarks(industry);
+            let html = `<h3>Industry Benchmarks - ${industry}</h3>`;
+
+            if (benchmarks.benchmarks) {
+                html += '<table><tr><th>Metric</th><th>Low</th><th>Median</th><th>Top Quartile</th><th>Unit</th></tr>';
+                for (const [metric, data] of Object.entries(benchmarks.benchmarks)) {
+                    html += `<tr><td>${metric}</td><td>${data.low}</td><td>${data.median}</td><td>${data.top_quartile}</td><td>${data.unit || ''}</td></tr>`;
+                }
+                html += '</table>';
+                if (benchmarks.industryInsights) {
+                    html += '<h4>Key Insights</h4><ul>';
+                    benchmarks.industryInsights.forEach(i => html += `<li>${i}</li>`);
+                    html += '</ul>';
+                }
+                if (benchmarks.keyRisks) {
+                    html += '<h4>Key Risks</h4><ul>';
+                    benchmarks.keyRisks.forEach(r => html += `<li>${r}</li>`);
+                    html += '</ul>';
+                }
+            } else {
+                html += `<pre>${JSON.stringify(benchmarks, null, 2)}</pre>`;
+            }
+
+            this.showAIOutput(`Benchmarks - ${industry}`, html, { provider: aiGateway.config.provider, model: aiGateway.getProviderConfig().model });
+            this.lastAIGenerateFunction = () => this.generateAIInsights();
+        } catch (error) {
+            this.showAIOutput('Error', `<p style="color:red">${error.message}</p>`, {});
+        }
+    }
+
+    // ============== WORKFLOW METHODS ==============
+
+    initWorkflows() {
+        workflowEngine.loadWorkflows();
+        document.getElementById('runWorkflowBtn')?.addEventListener('click', () => this.showRunWorkflowModal());
+        document.getElementById('executeWorkflowBtn')?.addEventListener('click', () => this.executeSelectedWorkflow());
+    }
+
+    renderWorkflowsTab() {
+        this.renderWorkflowTemplates();
+        this.renderSavedWorkflows();
+        this.renderAgentRoles();
+    }
+
+    renderWorkflowTemplates() {
+        const grid = document.getElementById('workflowTemplatesGrid');
+        if (!grid) return;
+
+        const templates = workflowTemplates.getAllTemplates();
+        grid.innerHTML = templates.map((t, idx) => {
+            const agents = [...new Set(t.steps.map(s => s.agent))];
+            return `
+            <div class="wf-template-card" data-idx="${idx}">
+                <h4>${t.name}</h4>
+                <p>${t.description}</p>
+                <div class="wf-card-meta">
+                    <span>${t.steps.length} steps</span>
+                    <span>${t.estimatedDuration}</span>
+                </div>
+                <div class="wf-card-agents">
+                    ${agents.map(a => {
+                        const role = agentRoles.getRole(a);
+                        return role ? `<span class="agent-badge" style="background:${role.color}">${role.icon} ${role.name}</span>` : '';
+                    }).join('')}
+                </div>
+                <div class="wf-card-actions">
+                    <button class="btn-primary" onclick="app.runTemplate(${idx})">Run</button>
+                    <button class="btn-secondary" onclick="app.installTemplate(${idx})">Install</button>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    renderSavedWorkflows() {
+        const container = document.getElementById('savedWorkflowsList');
+        if (!container) return;
+
+        const workflows = workflowEngine.workflows.filter(w => !w.isTemplate);
+        if (workflows.length === 0) {
+            container.innerHTML = '<p class="empty-state">No custom workflows yet. Install a template or create your own.</p>';
+            return;
+        }
+
+        container.innerHTML = '<table><thead><tr><th>Name</th><th>Category</th><th>Steps</th><th>Actions</th></tr></thead><tbody>' +
+            workflows.map(w => `<tr>
+                <td>${w.name}</td>
+                <td>${w.category}</td>
+                <td>${w.steps.length}</td>
+                <td>
+                    <button class="btn-primary" onclick="app.runSavedWorkflow('${w.id}')" style="font-size:0.8rem;padding:0.3rem 0.6rem">Run</button>
+                    <button class="btn-secondary" onclick="app.deleteWorkflow('${w.id}')" style="font-size:0.8rem;padding:0.3rem 0.6rem">Delete</button>
+                </td>
+            </tr>`).join('') + '</tbody></table>';
+    }
+
+    renderAgentRoles() {
+        const grid = document.getElementById('agentRolesGrid');
+        if (!grid) return;
+
+        const roles = agentRoles.getRoleOptions();
+        grid.innerHTML = roles.map(r => `
+            <div class="agent-role-card">
+                <div class="agent-icon" style="background:${r.color}">${r.icon}</div>
+                <div class="agent-info">
+                    <h5>${r.name}</h5>
+                    <span class="agent-tier">${r.tier}</span>
+                    <p>${agentRoles.getRole(r.id).description}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    runTemplate(idx) {
+        const template = workflowTemplates.getAllTemplates()[idx];
+        if (!template) return;
+        this.selectedWorkflow = template;
+        this.showRunModal(template);
+    }
+
+    runSavedWorkflow(wfId) {
+        const wf = workflowEngine.workflows.find(w => w.id === wfId);
+        if (!wf) return;
+        this.selectedWorkflow = wf;
+        this.showRunModal(wf);
+    }
+
+    installTemplate(idx) {
+        const wf = workflowTemplates.installTemplate(idx);
+        if (wf) {
+            alert('Template installed: ' + wf.name);
+            this.renderSavedWorkflows();
+        }
+    }
+
+    deleteWorkflow(wfId) {
+        if (confirm('Delete this workflow?')) {
+            workflowEngine.deleteWorkflow(wfId);
+            this.renderSavedWorkflows();
+        }
+    }
+
+    showRunModal(workflow) {
+        document.getElementById('runWorkflowModal').classList.remove('hidden');
+        document.getElementById('runWorkflowTitle').textContent = 'Run: ' + workflow.name;
+        document.getElementById('runWorkflowDesc').textContent = workflow.description;
+
+        // Render steps preview
+        const preview = document.getElementById('workflowStepsPreview');
+        preview.innerHTML = workflow.steps.map((s, i) => {
+            const role = agentRoles.getRole(s.agent);
+            return `<div class="wf-step-item">
+                <span class="wf-step-num">${i + 1}</span>
+                <span class="wf-step-name">${s.name}</span>
+                <span class="wf-step-agent" style="color:${role?.color || '#999'}">${role?.name || s.agent}</span>
+            </div>`;
+        }).join('');
+
+        // Populate customer dropdown
+        this.storageService.getAllCustomers().then(customers => {
+            const select = document.getElementById('wfCustomer');
+            select.innerHTML = '<option value="">Select Customer</option>';
+            customers.forEach(c => {
+                select.innerHTML += `<option value="${c.id}">${c.companyName} (${c.industry || 'N/A'})</option>`;
+            });
+        });
+
+        // Render trigger inputs
+        const inputs = document.getElementById('wfTriggerInputs');
+        const required = workflow.trigger?.requiredInputs || [];
+        const skip = ['customer']; // already have dropdown
+        inputs.innerHTML = required.filter(r => !skip.includes(r)).map(r => `
+            <div class="selector-group">
+                <label for="wfInput_${r}">${r.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</label>
+                <input type="text" id="wfInput_${r}" placeholder="Enter ${r.replace(/_/g, ' ')}">
+            </div>
+        `).join('');
+    }
+
+    showRunWorkflowModal() {
+        // Show template selection
+        const templates = workflowTemplates.getAllTemplates();
+        if (templates.length > 0) this.runTemplate(0);
+    }
+
+    async executeSelectedWorkflow() {
+        if (!this.selectedWorkflow) return;
+        if (!aiGateway.isReady()) { alert('Configure AI in Settings first'); return; }
+
+        const customerId = document.getElementById('wfCustomer').value;
+        if (!customerId) { alert('Select a customer'); return; }
+
+        // Gather trigger data
+        const customers = await this.storageService.getAllCustomers();
+        const customer = customers.find(c => c.id == customerId);
+        const triggerData = { customer: customer.companyName, industry: customer.industry || 'General' };
+
+        // Collect additional inputs
+        const required = this.selectedWorkflow.trigger?.requiredInputs || [];
+        required.forEach(r => {
+            const el = document.getElementById('wfInput_' + r);
+            if (el && el.value) triggerData[r] = el.value;
+        });
+
+        // Hide modal, show output
+        document.getElementById('runWorkflowModal').classList.add('hidden');
+        const outputSection = document.getElementById('workflowRunOutput');
+        outputSection.classList.remove('hidden');
+        document.getElementById('wfRunTitle').textContent = 'Running: ' + this.selectedWorkflow.name;
+        document.getElementById('wfRunContent').innerHTML = '<div class="ai-loading">Executing workflow...</div>';
+        document.getElementById('wfRunLogs').innerHTML = '';
+        document.getElementById('wfManagerReview').classList.add('hidden');
+
+        // Ensure workflow is in engine
+        if (!workflowEngine.workflows.find(w => w.id === this.selectedWorkflow.id)) {
+            workflowEngine.workflows.push(this.selectedWorkflow);
+        }
+
+        // Execute
+        const run = await workflowEngine.startWorkflow(this.selectedWorkflow.id, triggerData);
+
+        // Render logs
+        const logsEl = document.getElementById('wfRunLogs');
+        logsEl.innerHTML = run.logs.map(l => `<div class="log-entry"><span class="log-time">${new Date(l.timestamp).toLocaleTimeString()}</span>${l.message}</div>`).join('');
+
+        // Render meta
+        document.getElementById('wfRunMeta').innerHTML = `
+            <span>Status: <strong>${run.status}</strong></span>
+            <span>Steps: ${Object.keys(run.stepResults).length}/${this.selectedWorkflow.steps.length}</span>
+            <span>Started: ${new Date(run.startedAt).toLocaleTimeString()}</span>
+            ${run.completedAt ? `<span>Completed: ${new Date(run.completedAt).toLocaleTimeString()}</span>` : ''}
+        `;
+
+        // Render final output
+        if (run.finalOutput?.content) {
+            document.getElementById('wfRunContent').innerHTML = run.finalOutput.content;
+            document.getElementById('wfRunTitle').textContent = 'Completed: ' + this.selectedWorkflow.name;
+        } else if (run.status === 'failed') {
+            document.getElementById('wfRunContent').innerHTML = `<p style="color:red">Workflow failed.</p><pre>${JSON.stringify(run.errors, null, 2)}</pre>`;
+            document.getElementById('wfRunTitle').textContent = 'Failed: ' + this.selectedWorkflow.name;
+        }
+
+        // Render manager review
+        if (run.managerReview?.review) {
+            const reviewEl = document.getElementById('wfManagerReview');
+            reviewEl.classList.remove('hidden');
+            const review = run.managerReview.review;
+            const statusClass = (review.approvalStatus || '').toLowerCase().replace(/_/g, '-');
+            reviewEl.innerHTML = `
+                <h4>Manager AI Review</h4>
+                <div style="display:flex;gap:1.5rem;align-items:center;margin-bottom:0.75rem">
+                    ${review.qualityScore ? `<span class="review-score">${review.qualityScore}/10</span>` : ''}
+                    ${review.approvalStatus ? `<span class="review-status ${statusClass}">${review.approvalStatus}</span>` : ''}
+                </div>
+                ${review.feedback ? `<p>${typeof review.feedback === 'string' ? review.feedback : JSON.stringify(review.feedback)}</p>` : ''}
+                ${review.mustFix && review.mustFix.length ? `<h5>Must Fix:</h5><ul>${review.mustFix.map(f => `<li>${f}</li>`).join('')}</ul>` : ''}
+            `;
+        }
+
+        outputSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    toggleWfEdit() {
+        const el = document.getElementById('wfRunContent');
+        const isEditable = el.contentEditable === 'true';
+        el.contentEditable = isEditable ? 'false' : 'true';
+        document.getElementById('wfEditBtn').textContent = isEditable ? 'Edit' : 'Done';
+    }
+
+    copyWfOutput() {
+        const el = document.getElementById('wfRunContent');
+        navigator.clipboard.writeText(el.innerText).then(() => alert('Copied!'));
+    }
+
+    printWfOutput() {
+        const content = document.getElementById('wfRunContent').innerHTML;
+        const title = document.getElementById('wfRunTitle').textContent;
+        const pw = window.open('', '_blank');
+        pw.document.write(`<html><head><title>${title}</title><style>body{font-family:Arial,sans-serif;margin:2rem;line-height:1.6}h1{color:#2c3e50}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{border:1px solid #ddd;padding:0.5rem}th{background:#f8f9fa}</style></head><body><h1>${title}</h1>${content}</body></html>`);
+        pw.document.close();
+        pw.print();
+    }
 }
 
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
     window.app = new ConsultingApp();
+    // Initialize AI after app is ready
+    setTimeout(() => {
+        app.initAI();
+        app.populateAIDropdowns();
+        app.initWorkflows();
+        // Render AI settings
+        const settingsContainer = document.getElementById('aiSettingsContainer');
+        if (settingsContainer) {
+            settingsContainer.innerHTML = aiSettingsUI.renderSettingsPanel();
+            aiSettingsUI.bindSettingsEvents();
+        }
+    }, 500);
 });

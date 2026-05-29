@@ -9,12 +9,21 @@
 </head>
 <body>
     <header>
-        <h1>Business Consulting Toolkit</h1>
+        <div class="header-top">
+            <h1>ABetWorks Consulting Toolkit</h1>
+            <div id="aiStatusIndicator" class="ai-mini-status not-ready">
+                <span class="mini-dot"></span>
+                <span class="mini-label">AI: Off</span>
+            </div>
+        </div>
         <nav>
             <button id="customersTab" class="tab-btn active">Customers</button>
             <button id="formsTab" class="tab-btn">Forms</button>
             <button id="reportsTab" class="tab-btn">Reports</button>
             <button id="templatesTab" class="tab-btn">Templates</button>
+            <button id="aiTab" class="tab-btn">AI Tools</button>
+            <button id="workflowsTab" class="tab-btn">Workflows</button>
+            <button id="settingsTab" class="tab-btn">Settings</button>
         </nav>
     </header>
 
@@ -205,6 +214,226 @@
                 </table>
             </div>
         </div>
+
+        <!-- AI Tools Tab -->
+        <div id="aiSection" class="section hidden">
+            <div class="section-header">
+                <h2>AI Consulting Tools</h2>
+                <div id="aiToolsStatus"></div>
+            </div>
+
+            <div class="ai-tools-grid">
+                <!-- AI Report Generator -->
+                <div class="ai-tool-card">
+                    <h3>AI Report Generator</h3>
+                    <p>Generate full consulting reports powered by AI. Select a customer, choose report type, and let AI create a comprehensive analysis.</p>
+                    <div class="tool-form">
+                        <div class="selector-group">
+                            <label for="aiReportCustomer">Customer:</label>
+                            <select id="aiReportCustomer"></select>
+                        </div>
+                        <div class="selector-group">
+                            <label for="aiReportType">Report Type:</label>
+                            <select id="aiReportType">
+                                <option value="diagnostic">Business Diagnostic</option>
+                                <option value="strategy">Strategy Recommendations</option>
+                                <option value="operations">Operations Assessment</option>
+                                <option value="financial">Financial Analysis</option>
+                                <option value="technology">Technology Readiness</option>
+                                <option value="market">Market Analysis</option>
+                                <option value="compliance">Compliance & Risk</option>
+                            </select>
+                        </div>
+                        <div class="selector-group">
+                            <label for="aiReportContext">Additional Context (optional):</label>
+                            <textarea id="aiReportContext" placeholder="Add any specific context, data points, or focus areas..."></textarea>
+                        </div>
+                        <button class="btn-primary" id="generateAIReportBtn">Generate Report with AI</button>
+                    </div>
+                </div>
+
+                <!-- AI Business Scorer -->
+                <div class="ai-tool-card">
+                    <h3>AI Business Scorer</h3>
+                    <p>Score a business across multiple dimensions with AI-powered analysis.</p>
+                    <div class="tool-form">
+                        <div class="selector-group">
+                            <label for="aiScoreCustomer">Customer:</label>
+                            <select id="aiScoreCustomer"></select>
+                        </div>
+                        <button class="btn-primary" id="generateAIScoreBtn">Generate Score Card</button>
+                    </div>
+                </div>
+
+                <!-- AI SWOT Generator -->
+                <div class="ai-tool-card">
+                    <h3>AI SWOT Analysis</h3>
+                    <p>Generate a detailed SWOT analysis specific to the business and industry.</p>
+                    <div class="tool-form">
+                        <div class="selector-group">
+                            <label for="aiSwotCustomer">Customer:</label>
+                            <select id="aiSwotCustomer"></select>
+                        </div>
+                        <button class="btn-primary" id="generateAISWOTBtn">Generate SWOT</button>
+                    </div>
+                </div>
+
+                <!-- AI Form Generator -->
+                <div class="ai-tool-card">
+                    <h3>AI Form Generator</h3>
+                    <p>Auto-generate diagnostic assessment forms based on industry.</p>
+                    <div class="tool-form">
+                        <div class="selector-group">
+                            <label for="aiFormIndustry">Industry:</label>
+                            <input type="text" id="aiFormIndustry" placeholder="e.g., SaaS, Healthcare, Manufacturing">
+                        </div>
+                        <div class="selector-group">
+                            <label for="aiFormType">Assessment Type:</label>
+                            <select id="aiFormType">
+                                <option value="general">General Business Diagnostic</option>
+                                <option value="digital">Digital Maturity</option>
+                                <option value="operations">Operations Efficiency</option>
+                                <option value="financial">Financial Health</option>
+                                <option value="growth">Growth Readiness</option>
+                            </select>
+                        </div>
+                        <button class="btn-primary" id="generateAIFormBtn">Generate Assessment Form</button>
+                    </div>
+                </div>
+
+                <!-- AI Proposal Writer -->
+                <div class="ai-tool-card">
+                    <h3>AI Proposal Writer</h3>
+                    <p>Generate professional consulting proposals for prospects.</p>
+                    <div class="tool-form">
+                        <div class="selector-group">
+                            <label for="aiProposalCustomer">Customer:</label>
+                            <select id="aiProposalCustomer"></select>
+                        </div>
+                        <div class="selector-group">
+                            <label for="aiProposalService">Service Offering:</label>
+                            <input type="text" id="aiProposalService" placeholder="e.g., Digital Transformation Assessment">
+                        </div>
+                        <button class="btn-primary" id="generateAIProposalBtn">Generate Proposal</button>
+                    </div>
+                </div>
+
+                <!-- AI Industry Insights -->
+                <div class="ai-tool-card">
+                    <h3>AI Industry Insights</h3>
+                    <p>Get benchmarks and insights for any industry.</p>
+                    <div class="tool-form">
+                        <div class="selector-group">
+                            <label for="aiInsightIndustry">Industry:</label>
+                            <input type="text" id="aiInsightIndustry" placeholder="e.g., E-commerce, Fintech, Logistics">
+                        </div>
+                        <button class="btn-primary" id="generateAIInsightsBtn">Get Industry Benchmarks</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Output Section (Editable) -->
+            <div id="aiOutputSection" class="ai-output-section hidden">
+                <div class="ai-output-header">
+                    <h3 id="aiOutputTitle">AI Generated Content</h3>
+                    <div class="ai-output-actions">
+                        <button class="btn-secondary" id="aiEditBtn" onclick="app.toggleAIEdit()">Edit</button>
+                        <button class="btn-secondary" id="aiCopyBtn" onclick="app.copyAIOutput()">Copy</button>
+                        <button class="btn-secondary" id="aiPrintBtn" onclick="app.printAIOutput()">Print</button>
+                        <button class="btn-primary" id="aiRegenerateBtn" onclick="app.regenerateAIOutput()">Regenerate</button>
+                    </div>
+                </div>
+                <div class="ai-output-meta" id="aiOutputMeta"></div>
+                <div id="aiOutputContent" class="ai-output-content"></div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settingsSection" class="section hidden">
+            <div class="section-header">
+                <h2>AI Settings</h2>
+            </div>
+            <div id="aiSettingsContainer" class="form-container">
+                <!-- AI Settings will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Workflows Tab -->
+        <div id="workflowsSection" class="section hidden">
+            <div class="section-header">
+                <h2>Consulting Workflows</h2>
+                <div>
+                    <button class="btn-primary" id="runWorkflowBtn">Run Workflow</button>
+                    <button class="btn-secondary" id="createWorkflowBtn">Create Custom</button>
+                </div>
+            </div>
+
+            <!-- Workflow Templates Grid -->
+            <div class="form-container">
+                <h3>Workflow Templates</h3>
+                <p>Pre-built consulting pipelines. Each template defines the full process: which AI agents handle each step, what research they do, and how the manager reviews everything.</p>
+                <div id="workflowTemplatesGrid" class="workflow-templates-grid">
+                    <!-- Templates rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Active/Saved Workflows -->
+            <div class="form-container">
+                <h3>My Workflows</h3>
+                <div id="savedWorkflowsList">
+                    <p class="empty-state">No custom workflows yet. Install a template or create your own.</p>
+                </div>
+            </div>
+
+            <!-- Run Workflow Modal -->
+            <div id="runWorkflowModal" class="form-container hidden">
+                <h3 id="runWorkflowTitle">Run Workflow</h3>
+                <p id="runWorkflowDesc"></p>
+
+                <div class="workflow-steps-preview" id="workflowStepsPreview">
+                    <!-- Step preview rendered here -->
+                </div>
+
+                <div class="selector-group">
+                    <label for="wfCustomer">Customer:</label>
+                    <select id="wfCustomer"></select>
+                </div>
+
+                <div id="wfTriggerInputs">
+                    <!-- Dynamic trigger inputs -->
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-primary" id="executeWorkflowBtn">Execute Workflow</button>
+                    <button class="btn-secondary" onclick="document.getElementById('runWorkflowModal').classList.add('hidden')">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Workflow Execution Output -->
+            <div id="workflowRunOutput" class="ai-output-section hidden">
+                <div class="ai-output-header">
+                    <h3 id="wfRunTitle">Workflow Running...</h3>
+                    <div class="ai-output-actions">
+                        <button class="btn-secondary" id="wfEditBtn" onclick="app.toggleWfEdit()">Edit</button>
+                        <button class="btn-secondary" onclick="app.copyWfOutput()">Copy</button>
+                        <button class="btn-secondary" onclick="app.printWfOutput()">Print</button>
+                    </div>
+                </div>
+                <div id="wfRunMeta" class="ai-output-meta"></div>
+                <div id="wfRunLogs" class="workflow-logs"></div>
+                <div id="wfRunContent" class="ai-output-content"></div>
+                <div id="wfManagerReview" class="workflow-review hidden"></div>
+            </div>
+
+            <!-- Agent Roles Reference -->
+            <div class="form-container">
+                <h3>Agent Roles</h3>
+                <p>AI agents available for workflows. Each has specialized expertise and prompts.</p>
+                <div id="agentRolesGrid" class="agent-roles-grid">
+                    <!-- Agent cards rendered by JS -->
+                </div>
+            </div>
+        </div>
     </main>
 
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
@@ -213,6 +442,13 @@
     <script src="reports.js"></script>
     <script src="excel-importer.js"></script>
     <script src="template-system.js"></script>
+    <script src="ai-gateway.js"></script>
+    <script src="ai-reports.js"></script>
+    <script src="ai-insights.js"></script>
+    <script src="ai-settings.js"></script>
+    <script src="agent-roles.js"></script>
+    <script src="workflow-engine.js"></script>
+    <script src="workflow-templates.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
